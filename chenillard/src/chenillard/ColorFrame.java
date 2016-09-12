@@ -6,40 +6,45 @@ import javax.swing.JFrame;
 
 public class ColorFrame
 {
-	public static void startChenillard(int id, int PortSrc, int PortClient) throws IOException,InterruptedException
+	static JFrame frame;
+	static ServeurUDP serveurUDP;
+	static ClientUDP clientUDP;
+	
+	public static void startChenillard(int PortSrc, int PortClient,int firstProc) throws IOException,InterruptedException
 	{
-		JFrame frame = new JFrame("Chenillard" + id);
-		frame.setSize(300,300);
+		frame = new JFrame("Chenillard");
 
-		
-		ServeurUDP serveurUDP = new ServeurUDP();
+		serveurUDP = new ServeurUDP();
 		serveurUDP.open(PortSrc);
-		ClientUDP clientUDP = new ClientUDP();
+		clientUDP = new ClientUDP();
 		clientUDP.open();
-		
-		//
-		frame.getContentPane().setBackground(Color.GREEN);
-		frame.setVisible(true);
-		Thread.sleep(15000);
 
-		if (id != 1)
-		{
+		if (firstProc == 1) {clientUDP.send(PortClient);}
+		
+		while (0==0) {
+			frame.setSize(300,300);
+			
+			//
+			frame.getContentPane().setBackground(Color.GREEN);
+			frame.setVisible(true);
+			Thread.sleep(15000);
+	
 			serveurUDP.receive();
+			
+			//
+			frame.getContentPane().setBackground(Color.RED);
+			frame.setVisible(true);
+			Thread.sleep(2000);
+			
+			frame.getContentPane().setBackground(Color.GREEN);
+			frame.setVisible(true);
+			Thread.sleep(2000);
+			
+			clientUDP.send(PortClient);
 		}
-		
-		//
-		frame.getContentPane().setBackground(Color.RED);
-		frame.setVisible(true);
-		Thread.sleep(2000);
-		
-		frame.getContentPane().setBackground(Color.GREEN);
-		frame.setVisible(true);
-		Thread.sleep(2000);
-		
-		clientUDP.send(PortClient);
-		
-		serveurUDP.close();
-		clientUDP.close();
-		frame.dispose();
+
+		//serveurUDP.close();
+		//clientUDP.close();
+		//frame.dispose();
 	}
 }
